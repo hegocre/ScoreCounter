@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Score Counter</string>
+    <string name="reset">Reset</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="minus" translatable="false">-1</string>
+</resources>
