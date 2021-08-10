@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Marcador de puntuación</string>
-    <string name="reset">Reiniciar</string>
+    <string name="dialog_tutorial_title">Como utililizar</string>
+    <string name="dialog_tutorial_message">Para cambiar el marcador, pulse en la parte superior para incrementarlo, la parte inferior para reducirlo, o mantenga pulsado para restablecerlo.</string>
 </resources>

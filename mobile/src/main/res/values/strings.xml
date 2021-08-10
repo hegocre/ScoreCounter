@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Score Counter</string>
-    <string name="reset">Reset</string>
-    <string name="zero" translatable="false">0</string>
-    <string name="minus" translatable="false">-1</string>
+    <string name="dialog_tutorial_title">How to use</string>
+    <string name="dialog_tutorial_message">To change a score, press on its upper part to increment it, on its lower part to decrement it, or long press to reset it.</string>
 </resources>

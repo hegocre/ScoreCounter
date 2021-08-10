@@ -1,14 +1,17 @@
 package es.hegocre.scorecounter
 
-import android.content.SharedPreferences
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.databinding.DataBindingUtil
 import androidx.preference.PreferenceManager
+import es.hegocre.scorecounter.data.Score
 import es.hegocre.scorecounter.databinding.ActivityScoreBinding
 
 class MainActivity : AppCompatActivity() {
@@ -87,6 +90,29 @@ class MainActivity : AppCompatActivity() {
         private fun saveValue() {
             editor.putString(scoreId + "last", scoreView.text.toString())
             editor.apply()
+        }
+    }
+
+    private fun showTutorialDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.dialog_tutorial_title)
+            .setMessage(R.string.dialog_tutorial_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    companion object {
+        fun isFirstInstall (context: Context): Boolean {
+            return try {
+                val firstInstallTime =
+                    context.packageManager.getPackageInfo(context.packageName, 0).firstInstallTime
+                val lastUpdateTime =
+                    context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime
+                firstInstallTime == lastUpdateTime
+            } catch (e: PackageManager.NameNotFoundException) {
+                e.printStackTrace()
+                true
+            }
         }
     }
 }
