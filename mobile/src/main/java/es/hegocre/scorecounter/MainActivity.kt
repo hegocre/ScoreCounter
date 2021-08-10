@@ -20,15 +20,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityScoreBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_score)
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
-        hideSystemUI()
-
-        Scorer (binding.score1, binding.add1Layout, binding.sub1Layout, "score1")
-        Scorer (binding.score2, binding.add2Layout, binding.sub2Layout, "score2")
+        Score.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this).also {
+            if (it.getBoolean("firstRun", true)) {
+                if (isFirstInstall(this))
+                    showTutorialDialog()
+                it.edit().putBoolean("firstRun", false).apply()
+            }
+        })
+        Score("score1").let { score ->
+            binding.score1 = score
+            loadScore(score, binding.add1Layout, binding.sub1Layout)
+        }
+        Score("score2").let { score ->
+            binding.score2 = score
+            loadScore(score, binding.add2Layout, binding.sub2Layout)
+        }
     }
 
     private fun hideSystemUI() {
@@ -44,52 +52,20 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
     }
 
-    inner class Scorer (private val scoreView : TextView, addLayout : View, subLayout : View, private val scoreId : String) {
-        private var isLong = false
-        private val editor = sharedPreferences.edit()
-
-        init {
-            addLayout.setOnClickListener {
-                if (isLong) isLong = false
-                else add()
-            }
-            addLayout.setOnLongClickListener {
-                isLong = true
-                reset()
-                false
-            }
-            subLayout.setOnClickListener {
-                if (isLong) isLong = false
-                else sub()
-            }
-            subLayout.setOnLongClickListener {
-                isLong = true
-                reset()
-                false
-            }
-
-            scoreView.text = sharedPreferences.getString(scoreId + "last", "0")
+    private fun loadScore(score: Score, addLayout: View, subLayout: View) {
+        addLayout.setOnClickListener {
+            score.inc()
         }
-
-        private fun add() {
-            scoreView.text = (scoreView.text.toString().toInt() + 1).toString()
-            saveValue()
+        addLayout.setOnLongClickListener {
+            score.reset()
+            true
         }
-
-        private fun sub() {
-            val so = scoreView.text.toString().toInt()
-            if (so > 0) scoreView.text = (so - 1).toString()
-            saveValue()
+        subLayout.setOnClickListener {
+            score.dec()
         }
-
-        private fun reset() {
-            scoreView.text = "0"
-            saveValue()
-        }
-
-        private fun saveValue() {
-            editor.putString(scoreId + "last", scoreView.text.toString())
-            editor.apply()
+        subLayout.setOnLongClickListener {
+            score.reset()
+            true
         }
     }
 
