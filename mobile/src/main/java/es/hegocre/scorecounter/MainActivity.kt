@@ -15,8 +15,7 @@ import es.hegocre.scorecounter.data.Score
 import es.hegocre.scorecounter.databinding.ActivityScoreBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityScoreBinding
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var binding: ActivityScoreBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

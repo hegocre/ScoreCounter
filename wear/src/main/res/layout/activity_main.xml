@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_grey"
     android:padding="@dimen/box_inset_layout_padding"
     tools:context="es.hegocre.scorecounter.MainActivity"
-    tools:deviceIds="wear"
-    android:id="@+id/mainLayout">
+    tools:deviceIds="wear">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,11 +15,11 @@
         tools:context="es.hegocre.scorecounter.MainActivity">
 
         <View
+            android:id="@+id/divider"
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:id="@+id/divider"
             android:background="@color/grey" />
 
         <RelativeLayout
@@ -44,19 +44,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <View
                     android:id="@+id/add1Layout"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="0dp"/>
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <View
                     android:id="@+id/sub1Layout"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="0dp"/>
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -84,19 +84,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <View
                     android:id="@+id/add2Layout"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="0dp"/>
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <View
                     android:id="@+id/sub2Layout"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="0dp"/>
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 

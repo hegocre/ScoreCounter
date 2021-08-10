@@ -10,8 +10,8 @@ import es.hegocre.scorecounter.databinding.ActivityMainBinding
 
 class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvider {
 
-    private lateinit var binding : ActivityMainBinding
-    private lateinit var ambientController : AmbientModeSupport.AmbientController
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var ambientController: AmbientModeSupport.AmbientController
     private var needsBurnProtect = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +23,6 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
         Scorer(binding.score2, binding.add2Layout, binding.sub2Layout)
 
         ambientController = AmbientModeSupport.attach(this)
-
     }
 
     class Scorer(private val scoreView: TextView, addLayout: View, subLayout: View) {
@@ -64,21 +63,43 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
         }
     }
 
-    override fun getAmbientCallback() : AmbientModeSupport.AmbientCallback = MyAmbientCallback()
+    override fun getAmbientCallback(): AmbientModeSupport.AmbientCallback = MyAmbientCallback()
 
     private inner class MyAmbientCallback : AmbientModeSupport.AmbientCallback() {
 
         override fun onEnterAmbient(ambientDetails: Bundle?) {
-            binding.root.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.black))
-            binding.divider.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+            binding.root.setBackgroundColor(
+                ContextCompat.getColor(
+                    this@MainActivity,
+                    R.color.black
+                )
+            )
+            binding.divider.setBackgroundColor(
+                ContextCompat.getColor(
+                    this@MainActivity,
+                    R.color.white
+                )
+            )
 
-            needsBurnProtect = ambientDetails!!.getBoolean(AmbientModeSupport.EXTRA_BURN_IN_PROTECTION, false)
+            needsBurnProtect =
+                ambientDetails?.getBoolean(AmbientModeSupport.EXTRA_BURN_IN_PROTECTION, false)
+                    ?: false
             super.onEnterAmbient(ambientDetails)
         }
 
         override fun onExitAmbient() {
-            binding.root.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.dark_grey))
-            binding.divider.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.grey))
+            binding.root.setBackgroundColor(
+                ContextCompat.getColor(
+                    this@MainActivity,
+                    R.color.dark_grey
+                )
+            )
+            binding.divider.setBackgroundColor(
+                ContextCompat.getColor(
+                    this@MainActivity,
+                    R.color.grey
+                )
+            )
             if (needsBurnProtect) binding.root.setPadding(0, 0, 0, 0)
             super.onExitAmbient()
         }
@@ -86,8 +107,10 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
         override fun onUpdateAmbient() {
             super.onUpdateAmbient()
             if (needsBurnProtect) {
-                val x = (Math.random() * 2 * Companion.BURN_IN_OFFSET_PX - Companion.BURN_IN_OFFSET_PX).toInt()
-                val y = (Math.random() * 2 * Companion.BURN_IN_OFFSET_PX - Companion.BURN_IN_OFFSET_PX).toInt()
+                val x =
+                    (Math.random() * 2 * Companion.BURN_IN_OFFSET_PX - Companion.BURN_IN_OFFSET_PX).toInt()
+                val y =
+                    (Math.random() * 2 * Companion.BURN_IN_OFFSET_PX - Companion.BURN_IN_OFFSET_PX).toInt()
                 binding.root.setPadding(x, y, 0, 0)
             }
         }
