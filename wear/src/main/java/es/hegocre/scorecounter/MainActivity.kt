@@ -2,10 +2,12 @@ package es.hegocre.scorecounter
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
+import androidx.preference.PreferenceManager
 import androidx.wear.ambient.AmbientModeSupport
+import es.hegocre.scorecounter.data.Score
 import es.hegocre.scorecounter.databinding.ActivityMainBinding
 
 class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvider {
@@ -16,50 +18,35 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        Scorer(binding.score1, binding.add1Layout, binding.sub1Layout)
-        Scorer(binding.score2, binding.add2Layout, binding.sub2Layout)
+        Score.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this))
+        Score("score1").let { score ->
+            binding.score1 = score
+            loadScore(score, binding.add1Layout, binding.sub1Layout)
+        }
+        Score("score2").let { score ->
+            binding.score2 = score
+            loadScore(score, binding.add2Layout, binding.sub2Layout)
+        }
 
         ambientController = AmbientModeSupport.attach(this)
     }
 
-    class Scorer(private val scoreView: TextView, addLayout: View, subLayout: View) {
-        private var isLong = false
-
-        init {
-            addLayout.setOnClickListener {
-                if (isLong) isLong = false
-                else add()
-            }
-            addLayout.setOnLongClickListener {
-                isLong = true
-                reset()
-                false
-            }
-            subLayout.setOnClickListener {
-                if (isLong) isLong = false
-                else sub()
-            }
-            subLayout.setOnLongClickListener {
-                isLong = true
-                reset()
-                false
-            }
+    private fun loadScore(score: Score, addLayout: View, subLayout: View) {
+        addLayout.setOnClickListener {
+            score.inc()
         }
-
-        private fun add() {
-            scoreView.text = (scoreView.text.toString().toInt() + 1).toString()
+        addLayout.setOnLongClickListener {
+            score.reset()
+            true
         }
-
-        private fun sub() {
-            val so = scoreView.text.toString().toInt()
-            if (so > 0) scoreView.text = (so - 1).toString()
+        subLayout.setOnClickListener {
+            score.dec()
         }
-
-        private fun reset() {
-            scoreView.text = "0"
+        subLayout.setOnLongClickListener {
+            score.reset()
+            true
         }
     }
 
