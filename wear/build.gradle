@@ -24,6 +24,15 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
@@ -36,5 +45,5 @@ dependencies {
     implementation 'androidx.wear:wear:1.1.0'
     compileOnly 'com.google.android.wearable:wearable:2.8.1'
     implementation 'androidx.core:core-ktx:1.6.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
