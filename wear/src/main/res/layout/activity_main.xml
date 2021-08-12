@@ -12,8 +12,7 @@
             type="es.hegocre.scorecounter.data.Score" />
     </data>
 
-    <androidx.wear.widget.BoxInsetLayout
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.wear.widget.BoxInsetLayout xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
