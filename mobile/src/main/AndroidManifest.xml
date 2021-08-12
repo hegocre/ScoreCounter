@@ -12,9 +12,9 @@
         <activity
             android:name="es.hegocre.scorecounter.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="true">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

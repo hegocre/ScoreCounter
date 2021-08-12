@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, binding.root).let { controller ->
             controller.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun isFirstInstall (context: Context): Boolean {
+        fun isFirstInstall(context: Context): Boolean {
             return try {
                 val firstInstallTime =
                     context.packageManager.getPackageInfo(context.packageName, 0).firstInstallTime
