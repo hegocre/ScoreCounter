@@ -3,15 +3,15 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion '30.0.3'
 
     defaultConfig {
         applicationId "es.hegocre.scorecounter"
         minSdkVersion 24
-        targetSdkVersion 30
-        versionCode 301010100
-        versionName "1.0.1"
+        targetSdkVersion 31
+        versionCode 311020100
+        versionName "1.0.2"
     }
 
     buildTypes {
