@@ -1,7 +1,5 @@
 package es.hegocre.scorecounter
 
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -23,9 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         Score.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this).also {
             if (it.getBoolean("firstRun", true)) {
-                if (isFirstInstall(this))
-                    showTutorialDialog()
-                it.edit().putBoolean("firstRun", false).apply()
+                showTutorialDialog()
             }
         })
         Score("score1").let { score ->
@@ -75,20 +71,5 @@ class MainActivity : AppCompatActivity() {
             .setMessage(R.string.dialog_tutorial_message)
             .setPositiveButton(android.R.string.ok, null)
             .show()
-    }
-
-    companion object {
-        fun isFirstInstall(context: Context): Boolean {
-            return try {
-                val firstInstallTime =
-                    context.packageManager.getPackageInfo(context.packageName, 0).firstInstallTime
-                val lastUpdateTime =
-                    context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime
-                firstInstallTime == lastUpdateTime
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-                true
-            }
-        }
     }
 }
