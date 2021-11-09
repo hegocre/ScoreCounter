@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         Score.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this).also {
             if (it.getBoolean("firstRun", true)) {
                 showTutorialDialog()
+                it.edit().putBoolean("firstRun", false).apply()
             }
         })
         Score("score1").let { score ->
