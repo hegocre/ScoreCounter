@@ -27,7 +27,7 @@ jobs:
         name: mobile-debug.apk
         path: mobile/build/outputs/apk/debug/mobile-debug.apk
     - name: Build wear with Gradle
-      run: ./gradlew clean && ./gradlew :mobile:assembleDebug
+      run: ./gradlew clean && ./gradlew :wear:assembleDebug
     - uses: actions/upload-artifact@v2
       with:
         name: wear-debug.apk
