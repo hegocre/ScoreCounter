@@ -1,6 +1,7 @@
 package es.hegocre.scorecounter
 
-import android.os.Bundle
+import android.content.Context
+import android.os.*
 import android.view.KeyEvent
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -117,11 +118,13 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
                 when (keyCode) {
                     KeyEvent.KEYCODE_STEM_1 -> {
                         binding.score1?.inc()
+                        vibrate()
                         true
                     }
                     KeyEvent.KEYCODE_STEM_2 -> {
                         if (buttonsAvailable[0]) binding.score2?.inc()
                         else binding.score1?.inc()
+                        vibrate()
                         true
                     }
                     KeyEvent.KEYCODE_STEM_3 -> {
@@ -133,6 +136,7 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
                             //No other button available
                                 binding.score1?.inc()
                         }
+                        vibrate()
                         true
                     }
                     else -> {
@@ -149,6 +153,7 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
         return when (keyCode) {
             KeyEvent.KEYCODE_STEM_1 -> {
                 binding.score1?.reset()
+                vibrate()
                 true
             }
             KeyEvent.KEYCODE_STEM_2 -> {
@@ -158,6 +163,8 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
                 else
                 //Buttons 2 and/or 3 available
                     binding.score1?.reset()
+
+                vibrate()
                 true
             }
             KeyEvent.KEYCODE_STEM_3 -> {
@@ -169,10 +176,35 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
                     //No other button available
                         binding.score1?.reset()
                 }
+                vibrate()
                 true
             }
             else -> {
                 super.onKeyDown(keyCode, event)
+            }
+        }
+    }
+
+    @Suppress("deprecation")
+    private fun Context.vibrate() {
+        val vibrator =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager =
+                    getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManager.defaultVibrator
+            } else {
+                getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+        if (vibrator.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        250,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
+            } else {
+                vibrator.vibrate(250)
             }
         }
     }
