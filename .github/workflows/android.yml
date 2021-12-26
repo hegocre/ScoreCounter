@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -24,11 +24,11 @@ jobs:
       run: ./gradlew clean && ./gradlew assembleDebug
     - uses: actions/upload-artifact@v2
       with:
-        name: app-debug-mobile.apk
-        path: app/build/outputs/apk/debug/app-debug-mobile.apk
+        name: mobile-debug.apk
+        path: mobile/build/outputs/apk/debug/mobile-debug.apk
     - name: Build wear with Gradle
-      run: ./gradlew clean && ./gradlew :mobile:assembleDebug
+      run: ./gradlew clean && ./gradlew :wear:assembleDebug
     - uses: actions/upload-artifact@v2
       with:
-        name: app-debug-wear.apk
-        path: app/build/outputs/apk/debug/app-debug-wear.apk
+        name: wear-debug.apk
+        path: wear/build/outputs/apk/debug/wear-debug.apk

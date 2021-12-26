@@ -10,8 +10,8 @@ android {
         applicationId "es.hegocre.scorecounter"
         minSdkVersion 24
         targetSdkVersion 31
-        versionCode 311030000
-        versionName "1.0.3"
+        versionCode 311040000
+        versionName "1.0.4"
     }
 
     buildTypes {
@@ -42,6 +42,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.preference:preference-ktx:1.1.1'
     testImplementation 'junit:junit:4.13.2'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.core:core-ktx:1.7.0'
 }
