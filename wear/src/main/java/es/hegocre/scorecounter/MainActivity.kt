@@ -112,67 +112,69 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return if (event?.repeatCount ?: 0 == 0) {
-            when (keyCode) {
-                KeyEvent.KEYCODE_STEM_1 -> {
-                    binding.score1?.inc()
-                    true
-                }
-                KeyEvent.KEYCODE_STEM_2 -> {
-                    if (buttonsAvailable[0]) binding.score2?.inc()
-                    else binding.score1?.inc()
-                    true
-                }
-                KeyEvent.KEYCODE_STEM_3 -> {
-                    if (!(buttonsAvailable[0] && buttonsAvailable[1])) {
-                        if (buttonsAvailable[0] || buttonsAvailable[1])
-                        //Button 1 or 2 available
-                            binding.score2?.inc()
-                        else
-                        //No other button available
-                            binding.score1?.inc()
+        return when (event?.repeatCount ?: 0) {
+            0 -> {
+                when (keyCode) {
+                    KeyEvent.KEYCODE_STEM_1 -> {
+                        binding.score1?.inc()
+                        true
                     }
-                    true
-                }
-                else -> {
-                    super.onKeyDown(keyCode, event)
+                    KeyEvent.KEYCODE_STEM_2 -> {
+                        if (buttonsAvailable[0]) binding.score2?.inc()
+                        else binding.score1?.inc()
+                        true
+                    }
+                    KeyEvent.KEYCODE_STEM_3 -> {
+                        if (!(buttonsAvailable[0] && buttonsAvailable[1])) {
+                            if (buttonsAvailable[0] || buttonsAvailable[1])
+                            //Button 1 or 2 available
+                                binding.score2?.inc()
+                            else
+                            //No other button available
+                                binding.score1?.inc()
+                        }
+                        true
+                    }
+                    else -> {
+                        super.onKeyDown(keyCode, event)
+                    }
                 }
             }
-        } else super.onKeyDown(keyCode, event)
+            1 -> onKeyLongPress(keyCode, event)
+            else -> super.onKeyDown(keyCode, event)
+        }
     }
 
     override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
-        return if (event?.repeatCount ?: 0 == 0) {
-            when (keyCode) {
-                KeyEvent.KEYCODE_STEM_1 -> {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_STEM_1 -> {
+                binding.score1?.reset()
+                true
+            }
+            KeyEvent.KEYCODE_STEM_2 -> {
+                if (buttonsAvailable[0])
+                //Button 1 available
+                    binding.score2?.reset()
+                else
+                //Buttons 2 and/or 3 available
                     binding.score1?.reset()
-                    true
-                }
-                KeyEvent.KEYCODE_STEM_2 -> {
-                    if (buttonsAvailable[0])
-                    //Button 1 available
+                true
+            }
+            KeyEvent.KEYCODE_STEM_3 -> {
+                if (!(buttonsAvailable[0] && buttonsAvailable[1])) {
+                    if (buttonsAvailable[0] || buttonsAvailable[1])
+                    //Button 1 or 2 available
                         binding.score2?.reset()
                     else
-                    //Buttons 2 and/or 3 available
+                    //No other button available
                         binding.score1?.reset()
-                    true
                 }
-                KeyEvent.KEYCODE_STEM_3 -> {
-                    if (!(buttonsAvailable[0] && buttonsAvailable[1])) {
-                        if (buttonsAvailable[0] || buttonsAvailable[1])
-                        //Button 1 or 2 available
-                            binding.score2?.reset()
-                        else
-                        //No other button available
-                            binding.score1?.reset()
-                    }
-                    true
-                }
-                else -> {
-                    super.onKeyDown(keyCode, event)
-                }
+                true
             }
-        } else super.onKeyDown(keyCode, event)
+            else -> {
+                super.onKeyDown(keyCode, event)
+            }
+        }
     }
 
     companion object {
