@@ -8,9 +8,9 @@ android {
     defaultConfig {
         applicationId "es.hegocre.scorecounter"
         minSdkVersion 25
-        targetSdkVersion 31
-        versionCode 311040100
-        versionName "1.0.4"
+        targetSdkVersion 33
+        versionCode 311050100
+        versionName "1.0.5"
     }
 
     buildTypes {

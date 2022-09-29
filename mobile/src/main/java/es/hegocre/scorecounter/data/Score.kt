@@ -13,7 +13,7 @@ data class Score(
     }
 
     fun dec() {
-        if (score.get() > 0) score.set(score.get().dec())
+        score.set(score.get().dec())
         save()
     }
 
