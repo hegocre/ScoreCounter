@@ -3,14 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "es.hegocre.scorecounter"
         minSdkVersion 25
-        targetSdkVersion 31
-        versionCode 311040100
-        versionName "1.0.4"
+        targetSdkVersion 33
+        versionCode 311050100
+        versionName "1.0.5"
     }
 
     buildTypes {
@@ -35,15 +35,20 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'es.hegocre.scorecounter'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.google.android.support:wearable:2.8.1'
+    implementation 'com.google.android.support:wearable:2.9.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.wear:wear:1.2.0'
-    compileOnly 'com.google.android.wearable:wearable:2.8.1'
-    implementation 'androidx.core:core-ktx:1.7.0'
+    compileOnly 'com.google.android.wearable:wearable:2.9.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.wear:wear-input:1.1.0'
+    //noinspection KtxExtensionAvailable
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
 }
