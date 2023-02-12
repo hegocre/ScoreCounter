@@ -10,8 +10,9 @@ android {
         applicationId "es.hegocre.scorecounter"
         minSdkVersion 24
         targetSdkVersion 33
-        versionCode 311050000
-        versionName "1.0.5"
+        versionCode 311100001
+        versionName "1.1.0"
+        resConfigs 'ca', 'es', 'en'
     }
 
     buildTypes {
@@ -24,28 +25,37 @@ android {
     }
 
     buildFeatures {
-        viewBinding true
-        dataBinding true
+        compose true
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     namespace 'es.hegocre.scorecounter'
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.preference:preference-ktx:1.2.0'
-    testImplementation 'junit:junit:4.13.2'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+
+    //Android dependencies
     implementation 'androidx.core:core-ktx:1.9.0'
-    //noinspection KtxExtensionAvailable
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    //Compose
+    implementation 'androidx.activity:activity-compose:1.6.1'
+    implementation 'androidx.compose.material3:material3:1.0.1'
+    implementation "androidx.compose.ui:ui:$compose_version"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 }
