@@ -1,12 +1,13 @@
 package es.hegocre.scorecounter
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,10 @@ class MainActivity : ComponentActivity() {
         val scoreViewModel by viewModels<ScoreViewModel>()
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        val rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE
+        val winParams = window.attributes
+        winParams.rotationAnimation = rotationAnimation
+        window.attributes = winParams
 
         setContent {
             val darkTheme = isSystemInDarkTheme()
@@ -60,32 +66,51 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    Row {
-                        ScoreView(
-                            score = scoreViewModel.score1,
-                            onScoreAdd = { scoreViewModel.score1++ },
-                            onScoreSub = { scoreViewModel.score1-- },
-                            onScoreReset = { scoreViewModel.score1 = 0 },
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight()
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(4.dp)
-                                .background(MaterialTheme.colorScheme.onSurface)
-                        )
-                        ScoreView(
-                            score = scoreViewModel.score2,
-                            onScoreAdd = { scoreViewModel.score2++ },
-                            onScoreSub = { scoreViewModel.score2-- },
-                            onScoreReset = { scoreViewModel.score2 = 0 },
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight()
-                        )
+                    val configuration = LocalConfiguration.current
+
+                    if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        Column {
+                            ScoreView(
+                                score = scoreViewModel.score1,
+                                onScoreAdd = { scoreViewModel.score1++ },
+                                onScoreSub = { scoreViewModel.score1-- },
+                                onScoreReset = { scoreViewModel.score1 = 0 },
+                                modifier = Modifier.weight(1f)
+                            )
+                            Divider(thickness = 4.dp, color = MaterialTheme.colorScheme.onSurface)
+                            ScoreView(
+                                score = scoreViewModel.score2,
+                                onScoreAdd = { scoreViewModel.score2++ },
+                                onScoreSub = { scoreViewModel.score2-- },
+                                onScoreReset = { scoreViewModel.score2 = 0 },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    } else {
+                        Row {
+                            ScoreView(
+                                score = scoreViewModel.score1,
+                                onScoreAdd = { scoreViewModel.score1++ },
+                                onScoreSub = { scoreViewModel.score1-- },
+                                onScoreReset = { scoreViewModel.score1 = 0 },
+                                modifier = Modifier.weight(1f)
+                            )
+                            Divider(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(4.dp)
+                            )
+                            ScoreView(
+                                score = scoreViewModel.score2,
+                                onScoreAdd = { scoreViewModel.score2++ },
+                                onScoreSub = { scoreViewModel.score2-- },
+                                onScoreReset = { scoreViewModel.score2 = 0 },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
+
 
                     if (showTutorialDialog) {
                         context.getSharedPreferences("preferences", Context.MODE_PRIVATE)
@@ -134,14 +159,14 @@ fun ScoreView(
         )
         Column(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .weight(1f)
                 .pointerInput(Unit) {
                     detectTapGestures(onTap = onScoreAdd, onLongPress = onScoreReset)
                 }
             )
             Box(modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .weight(1f)
                 .pointerInput(Unit) {
                     detectTapGestures(onTap = onScoreSub, onLongPress = onScoreReset)
