@@ -12,23 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
     - name: set up JDK 11
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
         java-version: '11'
-
+        distribution: 'zulu'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build mobile with Gradle
       run: ./gradlew clean && ./gradlew assembleDebug
-    - uses: actions/upload-artifact@v2
-      with:
-        name: mobile-debug.apk
-        path: mobile/build/outputs/apk/debug/mobile-debug.apk
+      - uses: actions/upload-artifact@v3
+        with:
+          name: mobile-debug.apk
+          path: mobile/build/outputs/apk/debug/mobile-debug.apk
     - name: Build wear with Gradle
       run: ./gradlew clean && ./gradlew :wear:assembleDebug
-    - uses: actions/upload-artifact@v2
-      with:
-        name: wear-debug.apk
-        path: wear/build/outputs/apk/debug/wear-debug.apk
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wear-debug.apk
+          path: wear/build/outputs/apk/debug/wear-debug.apk
