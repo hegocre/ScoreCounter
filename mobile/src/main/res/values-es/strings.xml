@@ -3,4 +3,6 @@
     <string name="app_name">Marcador de puntuación</string>
     <string name="dialog_tutorial_title">Como utililizar</string>
     <string name="dialog_tutorial_message">Para cambiar el marcador, pulse en la parte superior para incrementarlo, la parte inferior para reducirlo, o mantenga pulsado para restablecerlo.</string>
+    <string name="player_name">Nombre del jugador</string>
+    <string name="player">Jugador</string>
 </resources>

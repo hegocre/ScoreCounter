@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import es.hegocre.scorecounter.model.Score
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,14 +15,10 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
     private val _preferencesManager =
         application.getSharedPreferences("scores", Context.MODE_PRIVATE)
 
-    private val _scores = (_preferencesManager.getString("scores", null)?.let {
-        try {
-            Json.decodeFromString(it)
-        } catch (e: Exception) {
-            listOf(Score(), Score())
-        }
-    } ?: listOf(Score(), Score())).toMutableStateList()
-    val scores: List<Score>
+    private val _scores = Json.decodeFromString<List<Int>>(
+        _preferencesManager.getString("scores", "[0, 0]") ?: "[0, 0]"
+    ).toMutableStateList()
+    val scores: List<Int>
         get() = _scores
 
     private suspend fun saveScore() {
@@ -33,28 +28,9 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun add() {
-        _scores.add(Score())
-        viewModelScope.launch {
-            saveScore()
-        }
-    }
-
-    fun del(index: Int) {
-        if (index < _scores.size) {
-            _scores.removeAt(index)
-            if (_scores.isEmpty()) {
-                _scores.add(Score())
-            }
-            viewModelScope.launch {
-                saveScore()
-            }
-        }
-    }
-
     fun inc(index: Int) {
         if (index < _scores.size) {
-            _scores[index] = _scores[index].copy(score = _scores[index].score + 1)
+            _scores[index]++
             viewModelScope.launch {
                 saveScore()
             }
@@ -63,7 +39,7 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun dec(index: Int) {
         if (index < _scores.size) {
-            _scores[index] = _scores[index].copy(score = _scores[index].score - 1)
+            _scores[index]--
             viewModelScope.launch {
                 saveScore()
             }
@@ -72,16 +48,7 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun reset(index: Int) {
         if (index < _scores.size) {
-            _scores[index] = _scores[index].copy(score = 0)
-            viewModelScope.launch {
-                saveScore()
-            }
-        }
-    }
-
-    fun setPlayerName(index: Int, name: String) {
-        if (index < _scores.size) {
-            _scores[index] = _scores[index].copy(playerName = name)
+            _scores[index] = 0
             viewModelScope.launch {
                 saveScore()
             }
