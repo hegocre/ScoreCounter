@@ -9,8 +9,8 @@ import es.hegocre.scorecounter.model.Score
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import androidx.core.content.edit
 
 class ScoreViewModel(application: Application) : AndroidViewModel(application) {
     private val _preferencesManager =
@@ -19,7 +19,7 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
     private val _scores = (_preferencesManager.getString("scores", null)?.let {
         try {
             Json.decodeFromString(it)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             listOf(Score(), Score())
         }
     } ?: listOf(Score(), Score())).toMutableStateList()
@@ -29,7 +29,7 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun saveScore() {
         withContext(Dispatchers.IO) {
             val scoresString = Json.encodeToString(_scores.toList())
-            _preferencesManager.edit().putString("scores", scoresString).apply()
+            _preferencesManager.edit { putString("scores", scoresString) }
         }
     }
 

@@ -1,5 +1,6 @@
 package es.hegocre.scorecounter.ui.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -18,8 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -27,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,7 +54,9 @@ import es.hegocre.scorecounter.R
 import es.hegocre.scorecounter.ScoreViewModel
 import es.hegocre.scorecounter.model.Score
 import es.hegocre.scorecounter.ui.theme.ScoreCounterTheme
+import androidx.core.content.edit
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun ScoreList(
     scoreViewModel: ScoreViewModel
@@ -91,7 +95,7 @@ fun ScoreList(
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(count = scoresNum) { scoreIndex ->
                             if (scoreIndex != 0) {
-                                Divider(
+                                HorizontalDivider(
                                     thickness = 4.dp,
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
@@ -119,7 +123,7 @@ fun ScoreList(
                     LazyRow(modifier = Modifier.fillMaxSize()) {
                         items(count = scoresNum) { scoreIndex ->
                             if (scoreIndex != 0) {
-                                Divider(
+                                VerticalDivider(
                                     color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier
                                         .fillMaxHeight()
@@ -150,7 +154,7 @@ fun ScoreList(
 
         if (showTutorialDialog) {
             context.getSharedPreferences("preferences", Context.MODE_PRIVATE)
-                .edit().putBoolean("isFirstLaunch", false).apply()
+                .edit { putBoolean("isFirstLaunch", false) }
 
             AlertDialog(
                 onDismissRequest = { showTutorialDialog = false },
