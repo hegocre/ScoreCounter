@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -267,11 +268,12 @@ fun ScoreView(
                 modifier = Modifier
                     .pointerInput(Unit) {
                         detectTapGestures(onTap = { showPlayerNameDialog = true })
-                    }
-                    .weight(1f),
+                    },
                 text = score.playerName.ifBlank { "${stringResource(id = R.string.player)} ${index + 1}" },
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = if (score.playerName.isBlank()) 0.4f else 1f)
             )
+
+            Spacer(Modifier.weight(1f))
 
             Icon(
                 modifier = Modifier
