@@ -2,6 +2,7 @@ package es.hegocre.scorecounter
 
 import android.app.Application
 import android.content.Context
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,6 +27,10 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
     val scores: List<Score>
         get() = _scores
 
+    private val _startingScore = mutableIntStateOf(_preferencesManager.getInt("starting_score", 0))
+    val startingScore: Int
+        get() = _startingScore.intValue
+
     private suspend fun saveScore() {
         withContext(Dispatchers.IO) {
             val scoresString = Json.encodeToString(_scores.toList())
@@ -33,8 +38,15 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun add() {
-        _scores.add(Score())
+    suspend fun setStartingScore(startingScore: Int) {
+        _startingScore.intValue = startingScore
+        withContext(Dispatchers.IO) {
+            _preferencesManager.edit { putInt("starting_score", startingScore) }
+        }
+    }
+
+    fun add(startingScore: Int = 0) {
+        _scores.add(Score(score = startingScore))
         viewModelScope.launch {
             saveScore()
         }

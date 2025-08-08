@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Score Counter</string>
     <string name="dialog_tutorial_title">How to use</string>
-    <string name="dialog_tutorial_message">To change a score, press on its upper part to increment it, on its lower part to decrement it, or long press to reset it.</string>
+    <string name="dialog_tutorial_message">To change a score, press on its upper part to increment it, on its lower part to decrement it, or long press to reset it. Change the starting score by long pressing the + button.</string>
     <string name="player_name">Player name</string>
     <string name="player">Player</string>
+    <string name="starting_score">Starting score</string>
 </resources>

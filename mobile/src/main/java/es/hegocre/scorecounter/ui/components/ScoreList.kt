@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -36,6 +39,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,7 +50,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -55,6 +61,9 @@ import es.hegocre.scorecounter.ScoreViewModel
 import es.hegocre.scorecounter.model.Score
 import es.hegocre.scorecounter.ui.theme.ScoreCounterTheme
 import androidx.core.content.edit
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
@@ -62,6 +71,7 @@ fun ScoreList(
     scoreViewModel: ScoreViewModel
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     val scores = scoreViewModel.scores
     val scoresNum by remember {
@@ -74,13 +84,41 @@ fun ScoreList(
                 .getBoolean("isFirstLaunch", true)
         )
     }
+    var showSetStartingScoreDialog by remember { mutableStateOf(false) }
 
     ScoreCounterTheme {
         val configuration = LocalConfiguration.current
 
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(onClick = { scoreViewModel.add() }) {
+                val interactionSource = remember { MutableInteractionSource() }
+
+                val viewConfiguration = LocalViewConfiguration.current
+
+                LaunchedEffect(interactionSource) {
+                    var isLongClick = false
+
+                    interactionSource.interactions.collectLatest { interaction ->
+                        when (interaction) {
+                            is PressInteraction.Press -> {
+                                isLongClick = false
+                                delay(viewConfiguration.longPressTimeoutMillis)
+                                isLongClick = true
+                                showSetStartingScoreDialog = true
+                            }
+
+                            is PressInteraction.Release -> {
+                                if (isLongClick.not()) {
+                                    scoreViewModel.add(scoreViewModel.startingScore)
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+
+                FloatingActionButton(onClick = { }, interactionSource = interactionSource) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Score"
@@ -150,8 +188,6 @@ fun ScoreList(
             }
         }
 
-
-
         if (showTutorialDialog) {
             context.getSharedPreferences("preferences", Context.MODE_PRIVATE)
                 .edit { putBoolean("isFirstLaunch", false) }
@@ -165,6 +201,20 @@ fun ScoreList(
                 },
                 title = { Text(text = stringResource(id = R.string.dialog_tutorial_title)) },
                 text = { Text(text = stringResource(id = R.string.dialog_tutorial_message)) }
+            )
+        }
+
+        if (showSetStartingScoreDialog) {
+            InputStartingScoreDialog(
+                currentStartingScore = scoreViewModel.startingScore,
+                onSetStartingScore = {
+                    coroutineScope.launch {
+                        scoreViewModel.setStartingScore(it.toIntOrNull() ?: 0)
+                    }
+                },
+                onDismissRequest = {
+                    showSetStartingScoreDialog = false
+                }
             )
         }
     }
@@ -288,6 +338,70 @@ fun InputPlayerNameDialog(
                 TextButton(
                     onClick = {
                         onSetPlayerName(playerName)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(horizontal = 0.dp)
+                ) {
+                    Text(text = stringResource(android.R.string.ok))
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        requester.requestFocus()
+    }
+}
+
+@Composable
+fun InputStartingScoreDialog(
+    currentStartingScore: Int,
+    onSetStartingScore: (String) -> Unit,
+    onDismissRequest: (() -> Unit)? = null
+) {
+    val requester = FocusRequester()
+
+    val (startingScore, setStartingScore) = remember { mutableStateOf(currentStartingScore.toString()) }
+
+    Dialog(
+        onDismissRequest = { onDismissRequest?.invoke() },
+    ) {
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+            contentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
+            shape = MaterialTheme.shapes.extraLarge,
+            tonalElevation = 6.dp,
+        ) {
+            Column(modifier = Modifier.padding(all = 24.dp)) {
+                Text(
+                    text = stringResource(id = R.string.starting_score),
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(bottom = 16.dp, top = 8.dp)
+                        .focusRequester(requester),
+                    value = startingScore,
+                    onValueChange = { if (it.isBlank() || it.toIntOrNull() != null) setStartingScore(it) },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    maxLines = 1,
+                    label = { Text(text = stringResource(id = R.string.starting_score)) },
+                    placeholder = { Text(text = currentStartingScore.toString()) }
+                )
+
+
+                TextButton(
+                    onClick = {
+                        if (startingScore.isBlank()) {
+                            onSetStartingScore(currentStartingScore.toString())
+                        } else if (startingScore.toIntOrNull() != null) {
+                            onSetStartingScore(startingScore)
+                        }
+                        onDismissRequest?.invoke()
                     },
                     modifier = Modifier
                         .align(Alignment.End)
