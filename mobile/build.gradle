@@ -19,7 +19,7 @@ android {
         applicationId "es.hegocre.scorecounter"
         minSdk 24
         targetSdk 36
-        versionCode 361500000
+        versionCode 361500001
         versionName "1.5.0"
         resourceConfigurations += ['ca', 'es', 'en']
     }

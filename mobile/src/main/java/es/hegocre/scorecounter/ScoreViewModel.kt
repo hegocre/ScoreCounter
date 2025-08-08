@@ -84,7 +84,7 @@ class ScoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun reset(index: Int) {
         if (index < _scores.size) {
-            _scores[index] = _scores[index].copy(score = 0)
+            _scores[index] = _scores[index].copy(score = startingScore)
             viewModelScope.launch {
                 saveScore()
             }
