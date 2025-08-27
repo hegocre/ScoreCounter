@@ -1,0 +1,1 @@
+<p><i>Score Counter</i> is a really simple app to keep track of two scores. Just press on the upper part of one score to increment it, on the lower part to decrement it, or long press to reset it. The score is saved across sessions.</p>

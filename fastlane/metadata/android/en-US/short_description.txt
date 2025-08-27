@@ -1,0 +1,1 @@
+Simple app to keep track of two scores
