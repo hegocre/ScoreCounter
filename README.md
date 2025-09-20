@@ -17,3 +17,5 @@ The score is saved across sessions.
 [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
 alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=es.hegocre.scorecounter)
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80"
+     alt="Get it at IzzyOnDroid">](https://apt.izzysoft.de/packages/es.hegocre.scorecounter)
